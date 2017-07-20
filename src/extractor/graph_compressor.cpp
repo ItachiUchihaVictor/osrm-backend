@@ -184,6 +184,7 @@ void GraphCompressor::Compress(const std::unordered_set<NodeID> &barrier_nodes,
                 graph.GetEdgeData(reverse_e2).lane_description_id = selectLaneID(
                     rev_edge_data2.lane_description_id, rev_edge_data1.lane_description_id);
 
+                /*
                 // Do not compress edge if it crosses a traffic signal.
                 // This can't be done in CanCombineWith, becase we only store the
                 // traffic signals in the `traffic_lights` list, which EdgeData
@@ -191,6 +192,7 @@ void GraphCompressor::Compress(const std::unordered_set<NodeID> &barrier_nodes,
                 const bool has_node_penalty = traffic_lights.find(node_v) != traffic_lights.end();
                 if (has_node_penalty)
                     continue;
+                */
 
                 // Get weights before graph is modified
                 const auto forward_weight1 = fwd_edge_data1.weight;

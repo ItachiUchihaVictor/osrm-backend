@@ -69,8 +69,8 @@ Feature: Multi level routing
             | a    | b  | abcda,abcda                            | 20s    |
             | a    | f  | abcda,cm,mnopm,kp,ijkli,hj,efghe,efghe | 229.4s |
             | a    | l  | abcda,cm,mnopm,kp,ijkli,ijkli          | 144.7s |
-            | a    | o  | abcda,cm,mnopm,mnopm,mnopm             | 124.7s |
-            | f    | l  | efghe,hj,ijkli,ijkli,ijkli             | 124.7s |
+            | a    | o  | abcda,cm,mnopm,mnopm                   | 124.7s |
+            | f    | l  | efghe,hj,ijkli,ijkli                   | 124.7s |
             | f    | o  | efghe,hj,ijkli,kp,mnopm,mnopm          | 144.7s |
             | l    | o  | ijkli,kp,mnopm,mnopm                   | 60s    |
             | c    | m  | cm,cm                                  | 44.7s  |
