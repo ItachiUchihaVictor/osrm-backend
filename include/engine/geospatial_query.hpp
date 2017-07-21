@@ -444,6 +444,19 @@ template <typename RTreeT, typename DataFacadeT> class GeospatialQuery
         const std::vector<EdgeWeight> reverse_duration_vector =
             datafacade.GetUncompressedReverseDurations(geometry_id);
 
+        std::cout << "Geospatial:";
+        for( std::size_t i = 0; i < forward_weight_vector.size(); ++i )
+        {
+            std::cout << "[" << (i < data.fwd_segment_position ? '*' : ' ') << forward_weight_vector[i] << "," << forward_duration_vector[i] << "]";
+        }
+        std::cout << std::endl;
+        std::cout << "Geospatial Reverse:";
+        for( std::size_t i = 0; i < reverse_weight_vector.size(); ++i )
+        {
+            std::cout << "[" << (i < data.fwd_segment_position-1 ? '*' : ' ') << reverse_weight_vector[i] << "," << reverse_duration_vector[i] << "]";
+        }
+        std::cout << std::endl;
+
         for (std::size_t i = 0; i < data.fwd_segment_position; i++)
         {
             forward_weight_offset += forward_weight_vector[i];

@@ -244,6 +244,13 @@ void annotatePath(const FacadeT &facade,
         }
         end_index =
             weight_vector.size() - phantom_node_pair.target_phantom.fwd_segment_position - 1;
+        std::cout << "Local: Reverse: Geometry:";
+        for( std::size_t i = 0; i < id_vector.size(); ++i )
+        {
+            std::cout << " [" << id_vector[i] << "," << duration_vector[i] << "," << weight_vector[i] << "]";
+        }
+        std::cout << std::endl;
+
     }
     else
     {
@@ -257,7 +264,16 @@ void annotatePath(const FacadeT &facade,
         weight_vector = facade.GetUncompressedForwardWeights(target_geometry_id);
         duration_vector = facade.GetUncompressedForwardDurations(target_geometry_id);
         datasource_vector = facade.GetUncompressedForwardDatasources(target_geometry_id);
+        std::cout << "Local: Forward: Geometry:";
+        for( std::size_t i = 0; i < id_vector.size(); ++i )
+        {
+            std::cout << " [" << id_vector[i] << "," << duration_vector[i] << "," << weight_vector[i] << "]";
+        }
+        std::cout << std::endl;
     }
+
+    std::cout << "Start: " << phantom_node_pair.source_phantom.fwd_segment_position << " End: " << phantom_node_pair.target_phantom.fwd_segment_position << std::endl;
+    std::cout << "From: " << start_index << " to " << end_index << std::endl;
 
     // Given the following compressed geometry:
     // U---v---w---x---y---Z
@@ -286,6 +302,11 @@ void annotatePath(const FacadeT &facade,
                      util::guidance::TurnBearing(0)});
     }
 
+    std::cout << "Path:";
+    for( auto p : unpacked_path )
+        std::cout << "(" << p.turn_via_node << "," << p.weight_until_turn << ")";
+    std::cout << std::endl;
+
     if (unpacked_path.size() > 0)
     {
         const auto source_weight = start_traversed_in_reverse
@@ -313,11 +334,18 @@ void annotatePath(const FacadeT &facade,
             std::max(unpacked_path.front().duration_until_turn - source_duration, 0);
     }
 
+    std::cout << "Updated Path:";
+    for( auto p : unpacked_path )
+        std::cout << "(" << p.turn_via_node << "," << p.weight_until_turn << ")";
+    std::cout << std::endl;
+
+
     // there is no equivalent to a node-based node in an edge-expanded graph.
     // two equivalent routes may start (or end) at different node-based edges
     // as they are added with the offset how much "weight" on the edge
     // has already been traversed. Depending on offset one needs to remove
     // the last node.
+    /*
     if (unpacked_path.size() > 1)
     {
         const std::size_t last_index = unpacked_path.size() - 1;
@@ -326,10 +354,12 @@ void annotatePath(const FacadeT &facade,
         if (unpacked_path[last_index].turn_via_node ==
             unpacked_path[second_to_last_index].turn_via_node)
         {
+            std::cout << "Removing the penalty" << std::endl;
             unpacked_path.pop_back();
         }
         BOOST_ASSERT(!unpacked_path.empty());
     }
+    */
 }
 
 template <typename Algorithm>

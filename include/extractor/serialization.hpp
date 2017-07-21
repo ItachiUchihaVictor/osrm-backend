@@ -5,7 +5,6 @@
 #include "extractor/intersection_bearings_container.hpp"
 #include "extractor/nbg_to_ebg.hpp"
 #include "extractor/node_data_container.hpp"
-#include "extractor/node_with_penalty.hpp"
 #include "extractor/profile_properties.hpp"
 #include "extractor/restriction.hpp"
 #include "extractor/segment_data_container.hpp"
@@ -271,25 +270,6 @@ inline void write(storage::io::FileWriter &writer,
     std::for_each(restrictions.begin(), restrictions.end(), write_restriction);
 }
 
-inline void read(storage::io::FileReader &reader, std::vector<NodeWithPenalty> &node_penalties)
-{
-    auto count = reader.ReadElementCount64();
-    node_penalties.reserve(count);
-    NodeWithPenalty node_penalty;
-    while (count--)
-    {
-        node_penalty = reader.ReadOne<NodeWithPenalty>();
-        node_penalties.push_back(node_penalty);
-    }
-}
-
-inline void write(storage::io::FileWriter &writer,
-                  const std::vector<NodeWithPenalty> &node_penalties)
-{
-    writer.WriteElementCount64(node_penalties.size());
-    const auto write = [&writer](const auto &node_penalty) { writer.WriteOne(node_penalty); };
-    std::for_each(node_penalties.begin(), node_penalties.end(), write);
-}
 }
 }
 }

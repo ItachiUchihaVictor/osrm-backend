@@ -213,9 +213,6 @@ void GraphCompressor::Compress(const std::unordered_set<NodeID> &barrier_nodes,
                     scripting_environment.ProcessTurn(extraction_turn);
                     node_duration_penalty = extraction_turn.duration * 10;
                     node_weight_penalty = extraction_turn.weight * weight_multiplier;
-
-                    node_penalties.push_back(
-                        {node_v, *node_weight_penalty, *node_duration_penalty});
                 }
 
                 // Get weights before graph is modified

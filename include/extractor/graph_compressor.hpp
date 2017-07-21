@@ -1,7 +1,6 @@
 #ifndef GEOMETRY_COMPRESSOR_HPP
 #define GEOMETRY_COMPRESSOR_HPP
 
-#include "extractor/node_with_penalty.hpp"
 #include "extractor/scripting_environment.hpp"
 #include "util/typedefs.hpp"
 
@@ -31,13 +30,10 @@ class GraphCompressor
                   util::NodeBasedDynamicGraph &graph,
                   CompressedEdgeContainer &geometry_compressor);
 
-    const auto & getNodePenalties() const { return node_penalties; }
   private:
     void PrintStatistics(unsigned original_number_of_nodes,
                          unsigned original_number_of_edges,
                          const util::NodeBasedDynamicGraph &graph) const;
-
-    std::vector<NodeWithPenalty> node_penalties;
 };
 }
 }
