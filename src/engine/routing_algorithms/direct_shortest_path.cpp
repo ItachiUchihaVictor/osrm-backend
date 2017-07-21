@@ -42,6 +42,8 @@ InternalRouteResult directShortestPathSearch(SearchEngineData<Algorithm> &engine
            DO_NOT_FORCE_LOOPS,
            phantom_nodes);
 
+    std::cout << "Found path: " << weight << std::endl;
+
     std::vector<NodeID> unpacked_nodes;
     std::vector<EdgeID> unpacked_edges;
 

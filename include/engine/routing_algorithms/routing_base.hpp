@@ -151,8 +151,10 @@ void annotatePath(const FacadeT &facade,
         std::vector<EdgeWeight> weight_vector;
         std::vector<EdgeWeight> duration_vector;
         std::vector<DatasourceID> datasource_vector;
+
         if (geometry_index.forward)
         {
+            std::cout << "Forward" << std::endl;
             id_vector = facade.GetUncompressedForwardGeometry(geometry_index.id);
             weight_vector = facade.GetUncompressedForwardWeights(geometry_index.id);
             duration_vector = facade.GetUncompressedForwardDurations(geometry_index.id);
@@ -160,11 +162,20 @@ void annotatePath(const FacadeT &facade,
         }
         else
         {
+            std::cout << "Reverse" << std::endl;
             id_vector = facade.GetUncompressedReverseGeometry(geometry_index.id);
             weight_vector = facade.GetUncompressedReverseWeights(geometry_index.id);
             duration_vector = facade.GetUncompressedReverseDurations(geometry_index.id);
             datasource_vector = facade.GetUncompressedReverseDatasources(geometry_index.id);
         }
+
+        std::cout << "Geometry:";
+        for( std::size_t i = 0; i < id_vector.size(); ++i )
+        {
+            std::cout << " [" << id_vector[i] << "," << duration_vector[i] << "," << weight_vector[i] << "]";
+        }
+        std::cout << std::endl;
+
         BOOST_ASSERT(id_vector.size() > 0);
         BOOST_ASSERT(datasource_vector.size() > 0);
         BOOST_ASSERT(weight_vector.size() == id_vector.size() - 1);
@@ -181,8 +192,10 @@ void annotatePath(const FacadeT &facade,
 
         BOOST_ASSERT(start_index >= 0);
         BOOST_ASSERT(start_index < end_index);
+        std::cout << "Segments:";
         for (std::size_t segment_idx = start_index; segment_idx < end_index; ++segment_idx)
         {
+            std::cout << " [" << id_vector[segment_idx+1] << "," << duration_vector[segment_idx+1] << "," << weight_vector[segment_idx+1] << "]";
             unpacked_path.push_back(PathData{id_vector[segment_idx + 1],
                                              name_index,
                                              weight_vector[segment_idx],

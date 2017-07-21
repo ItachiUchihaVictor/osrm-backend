@@ -1,6 +1,8 @@
 #ifndef GEOMETRY_COMPRESSOR_HPP
 #define GEOMETRY_COMPRESSOR_HPP
 
+#include "extractor/node_with_penalty.hpp"
+#include "extractor/scripting_environment.hpp"
 #include "util/typedefs.hpp"
 
 #include "util/node_based_graph.hpp"
@@ -24,14 +26,18 @@ class GraphCompressor
   public:
     void Compress(const std::unordered_set<NodeID> &barrier_nodes,
                   const std::unordered_set<NodeID> &traffic_lights,
+                  ScriptingEnvironment &scripting_environment,
                   std::vector<TurnRestriction> &turn_restrictions,
                   util::NodeBasedDynamicGraph &graph,
                   CompressedEdgeContainer &geometry_compressor);
 
+    const auto & getNodePenalties() const { return node_penalties; }
   private:
     void PrintStatistics(unsigned original_number_of_nodes,
                          unsigned original_number_of_edges,
                          const util::NodeBasedDynamicGraph &graph) const;
+
+    std::vector<NodeWithPenalty> node_penalties;
 };
 }
 }

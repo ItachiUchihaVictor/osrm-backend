@@ -463,6 +463,7 @@ Extractor::BuildEdgeExpandedGraph(ScriptingEnvironment &scripting_environment,
     GraphCompressor graph_compressor;
     graph_compressor.Compress(barrier_nodes,
                               traffic_signals,
+                              scripting_environment,
                               turn_restrictions,
                               *node_based_graph,
                               compressed_edge_container);
