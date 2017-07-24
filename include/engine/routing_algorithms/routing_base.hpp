@@ -134,6 +134,31 @@ void annotatePath(const FacadeT &facade,
     BOOST_ASSERT(phantom_node_pair.target_phantom.forward_segment_id.id == target_node_id ||
                  phantom_node_pair.target_phantom.reverse_segment_id.id == target_node_id);
 
+    // datastructures to hold extracted data from geometry
+    std::vector<NodeID> id_vector;
+    std::vector<EdgeWeight> weight_vector;
+    std::vector<EdgeWeight> duration_vector;
+    std::vector<DatasourceID> datasource_vector;
+
+    const auto get_segment_geometry = [&](const auto geometry_index)
+    {
+        if (geometry_index.forward)
+        {
+            id_vector = facade.GetUncompressedForwardGeometry(geometry_index.id);
+            weight_vector = facade.GetUncompressedForwardWeights(geometry_index.id);
+            duration_vector = facade.GetUncompressedForwardDurations(geometry_index.id);
+            datasource_vector = facade.GetUncompressedForwardDatasources(geometry_index.id);
+        }
+        else
+        {
+            id_vector = facade.GetUncompressedReverseGeometry(geometry_index.id);
+            weight_vector = facade.GetUncompressedReverseWeights(geometry_index.id);
+            duration_vector = facade.GetUncompressedReverseDurations(geometry_index.id);
+            datasource_vector = facade.GetUncompressedReverseDatasources(geometry_index.id);
+        }
+    };
+
+
     auto node_from = unpacked_nodes.begin(), node_last = std::prev(unpacked_nodes.end());
     for (auto edge = unpacked_edges.begin(); node_from != node_last; ++node_from, ++edge)
     {
@@ -146,28 +171,8 @@ void annotatePath(const FacadeT &facade,
         const auto classes = facade.GetClassData(node_id);
 
         const auto geometry_index = facade.GetGeometryIndex(node_id);
-        std::vector<NodeID> id_vector;
+        get_segment_geometry(geometry_index);
 
-        std::vector<EdgeWeight> weight_vector;
-        std::vector<EdgeWeight> duration_vector;
-        std::vector<DatasourceID> datasource_vector;
-
-        if (geometry_index.forward)
-        {
-            std::cout << "Forward" << std::endl;
-            id_vector = facade.GetUncompressedForwardGeometry(geometry_index.id);
-            weight_vector = facade.GetUncompressedForwardWeights(geometry_index.id);
-            duration_vector = facade.GetUncompressedForwardDurations(geometry_index.id);
-            datasource_vector = facade.GetUncompressedForwardDatasources(geometry_index.id);
-        }
-        else
-        {
-            std::cout << "Reverse" << std::endl;
-            id_vector = facade.GetUncompressedReverseGeometry(geometry_index.id);
-            weight_vector = facade.GetUncompressedReverseWeights(geometry_index.id);
-            duration_vector = facade.GetUncompressedReverseDurations(geometry_index.id);
-            datasource_vector = facade.GetUncompressedReverseDatasources(geometry_index.id);
-        }
 
         std::cout << "Geometry:";
         for( std::size_t i = 0; i < id_vector.size(); ++i )
@@ -222,21 +227,14 @@ void annotatePath(const FacadeT &facade,
     }
 
     std::size_t start_index = 0, end_index = 0;
-    std::vector<unsigned> id_vector;
-    std::vector<EdgeWeight> weight_vector;
-    std::vector<EdgeWeight> duration_vector;
-    std::vector<DatasourceID> datasource_vector;
     const auto source_geometry_id = facade.GetGeometryIndex(source_node_id).id;
-    const auto target_geometry_id = facade.GetGeometryIndex(target_node_id).id;
-    const auto is_local_path = source_geometry_id == target_geometry_id && unpacked_path.empty();
+    const auto target_geometry = facade.GetGeometryIndex(target_node_id);
+    const auto is_local_path = source_geometry_id == target_geometry.id && unpacked_path.empty();
+
+    get_segment_geometry(target_geometry);
 
     if (target_traversed_in_reverse)
     {
-        id_vector = facade.GetUncompressedReverseGeometry(target_geometry_id);
-        weight_vector = facade.GetUncompressedReverseWeights(target_geometry_id);
-        duration_vector = facade.GetUncompressedReverseDurations(target_geometry_id);
-        datasource_vector = facade.GetUncompressedReverseDatasources(target_geometry_id);
-
         if (is_local_path)
         {
             start_index =
@@ -250,7 +248,6 @@ void annotatePath(const FacadeT &facade,
             std::cout << " [" << id_vector[i] << "," << duration_vector[i] << "," << weight_vector[i] << "]";
         }
         std::cout << std::endl;
-
     }
     else
     {
@@ -259,11 +256,6 @@ void annotatePath(const FacadeT &facade,
             start_index = phantom_node_pair.source_phantom.fwd_segment_position;
         }
         end_index = phantom_node_pair.target_phantom.fwd_segment_position;
-
-        id_vector = facade.GetUncompressedForwardGeometry(target_geometry_id);
-        weight_vector = facade.GetUncompressedForwardWeights(target_geometry_id);
-        duration_vector = facade.GetUncompressedForwardDurations(target_geometry_id);
-        datasource_vector = facade.GetUncompressedForwardDatasources(target_geometry_id);
         std::cout << "Local: Forward: Geometry:";
         for( std::size_t i = 0; i < id_vector.size(); ++i )
         {
